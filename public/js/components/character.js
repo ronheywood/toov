@@ -1,11 +1,10 @@
 (function(){
 	angular.module('Eve')
 	.factory('character', ['$http', function($http) {
-		//TODO [milestone2]: Repository of many Corp  character API keys
 		return { 
-			id : '{character id}',
-			api_key : '{character api key}',
-			api_vcode : '{character api vcode}'
+			id : '96956057',
+			api_key : '5801156',
+			api_vcode : '0I0SyJrdZAMnccTSwVOZfWH4oR9IEcwT2GgOIPtHhM1l3IFFSlAXETnnpgESlYvb'
 		}
 	}])
 
