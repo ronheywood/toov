@@ -3,6 +3,7 @@
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 		<script type="text/javascript" src="js/app.js"></script>
 	</head>
 	<body>
@@ -25,6 +26,18 @@
 	    			<div class="panel-body" ng-show="currentBlueprint">
 		    			<span ng-bind-html="blueprintImage(currentBlueprint)"></span>
 		    			{{currentBlueprint.data.typeName}}
+
+		    			<div >
+
+		    				<h3 >Materials</h3>
+
+							<div ng-repeat="material in currentBlueprint.data.materials">
+
+								{{material.typeName}} 
+	    						<span class="badge">{{material.quantity }}</span>
+								
+	    					</div>
+	    				</div>
 
 		    			<div ng-show="currentBlueprint.data.tech2Invention">
 
@@ -86,6 +99,9 @@
 	</div>
 
 	<!-- TODO [prod] bundle these resources into a single minified resource -->
+
+	<!-- Injector for Underscore.js functional programming helpers -->
+	<script type="text/javascript" src="js/dto/underscore.js"></script>
 
 	<!-- Facade to manage XML API and JSON API responses -->
 	<script type="text/javascript" src="js/dto/xml2json.js"></script>
