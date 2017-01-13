@@ -45,8 +45,13 @@ angular.module('Eve')
 					var dParse = new DOMParser();
 					try {
 		        		return Parser.xml2json(dParse.parseFromString(data,"text/xml")).eveapi.result;
-		        	} catch(e){ console.error(e); }
+		        	} catch(e){ var eveError = e; }
 
+					try {
+		        		return Parser.xml2json(dParse.parseFromString(data,"text/xml")).evec_api.marketstat;
+		        	} catch(e){ var marketError = e }
+
+		        	console.error(eveError,marketError);
 		        	return {}
 		    	}
 			}

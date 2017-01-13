@@ -1,10 +1,55 @@
 (function(){
 	angular.module('Eve')
-		.controller("BlueprintsController",['$scope','xmlService','_','$http', '$sce', 'character','xml','images',
-			function($scope, xmlService, _ , $http, $sce,character,xml,images){
+		.controller("BlueprintsController",['$scope','marketService','xmlService','_','$http', '$sce', 'character','xml','images',
+			function($scope,marketService,xmlService, _ , $http, $sce,character,xml,images){
 
 			   var action = 'char/Blueprints.xml.aspx?characterId=%d&keyID=%d&vCode=%s&flat=1';
 			   _self = this;
+
+			   var uniqueMaterialTypeIdList = function(){
+
+			   		 var materialList = _.chain($scope.blueprints)
+			   		 .pluck('data')
+					 .pluck('materials')
+					 .flatten()
+					 .pluck('materialTypeID')
+					 .value();
+
+					 return _.uniq(materialList);
+			   }
+
+			   var getMarketPrices = function(){
+
+					 var query = 'typeid='+uniqueMaterialTypeIdList().join(',') + '&regionlimit=10000002';
+					 
+					 marketService.get('/marketstat?'+query)
+					 .then(function(prices){
+			   				var parsed = xml.parse(prices).type;
+			   				var Index = {};
+
+			   				_.each(parsed,function(price,oi){
+			   					Index[price.data.id]  = price.sell;
+			   				});
+
+			   				_self.materialPrices = Index;
+			   				$scope.materialPrices = _self.materialPrices;
+
+			   				embelishMaterialsWithMarketPrices();
+					 });
+
+			   }
+
+			   var embelishMaterialsWithMarketPrices = function(){
+			   		$scope.blueprints.forEach(
+			   			function(bp){
+
+			   				bp.data.materials.forEach(function(m,i){
+			   					m.marketPrice = _self.materialPrices[m.materialTypeID];
+			   				});
+			   				
+			   			}
+			   		)
+			   }
 
 			   var embelishWithT2 = function(t2){
 			   		_.filter( $scope.blueprints, function(bp){ return bp.data.typeName == t2.Input})
@@ -50,6 +95,8 @@
 								embelishWithMaterials(material);
 							});
 
+							getMarketPrices();
+
 					    });
 			   }
 			   
@@ -60,8 +107,8 @@
 			        _self.blueprints = parsed.rowset.row;
 			        $scope.blueprints = _self.blueprints;
 
-					getIndustryMaterials();  
-					getTech2Inventions();      
+					getIndustryMaterials();
+					getTech2Inventions(); 
 
 			    });
 
@@ -90,6 +137,20 @@
 				    _self.currentBlueprint = bp;
 					$scope.currentBlueprint = bp;
 
+			   }
+
+			   $scope.industryCost = function( bp ){
+			   		if(bp == undefined) return '';
+
+			   		var marketAvg = 0.00;
+
+			   		bp.data.materials
+			   		.forEach(function(m){
+			   			//console.log( parseFloat(mp.avg['#text']) );
+			   			marketAvg += parseFloat( m.marketPrice.avg['#text'] ) * m.quantity;
+			   		});
+
+			   		return $sce.trustAsHtml( '' +marketAvg );
 			   }
 
 		}])

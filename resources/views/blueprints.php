@@ -36,7 +36,19 @@
 								{{material.typeName}} 
 	    						<span class="badge">{{material.quantity }}</span>
 								
+	    						<span> 
+	    							Unit ISK {{ material.marketPrice.avg['#text'] }}
+	    						</span>
+
+								<span> 
+									Total ISK {{  ((material.marketPrice.avg['#text']) * material.quantity).toFixed(2) }}
+								</span>
+
 	    					</div>
+
+	    					<strong>Unit Total</strong>
+	    					<span ng-bind-html="industryCost(currentBlueprint)"></span>
+	    					
 	    				</div>
 
 		    			<div ng-show="currentBlueprint.data.tech2Invention">
@@ -109,6 +121,7 @@
 	<!-- Assorted Eve API service brokers -->
 	<script type="text/javascript" src="js/services/crest.js"></script>
 	<script type="text/javascript" src="js/services/xml.js"></script>
+	<script type="text/javascript" src="js/services/market.js"></script>
 	
 	 <!-- Facade exposing information from the Eve static data export 
 		https://eveonline-third-party-documentation.readthedocs.io/en/latest/sde/ -->
