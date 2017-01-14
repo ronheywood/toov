@@ -48,7 +48,7 @@
 
 	    					<strong>Unit Total</strong>
 	    					<span ng-bind-html="industryCost(currentBlueprint)"></span>
-	    					
+
 	    				</div>
 
 		    			<div ng-show="currentBlueprint.data.tech2Invention">
@@ -70,7 +70,8 @@
 	    			<tr>
 	    				<th>Name</th>
 	    				<th>Material Efficency</th>
-	    				<th>Type Efficency</th>
+	    				<th>Time Efficency</th>
+	    				<th>Industry</th>
 	    				<th>Invents</th>
 	    			</tr>
 	    		</thead>
@@ -94,10 +95,17 @@
 	    				<td>{{blueprint.data.materialEfficiency}}</td>
 	    				<td>{{blueprint.data.timeEfficiency}}</td>
 	    				<td>
-	    					<div ng-repeat="invention in blueprint.data.tech2Invention">
-	    						
-								<span ng-bind-html="typeImage(invention.outputs,32)"></span>
-	    						{{invention.Invents}} 
+	    					<span>
+	    					Sell ISK {{ blueprint.data.InventoryMarketPrice.sell.avg['#text'] }}
+	    					</span>
+	    					
+	    					<span ng-bind="{{ blueprint.industryCost }}"></span>
+	    				</td>
+	    				<td>
+	    					<div ng-show="blueprint.data.tech2Invention[0].tech2ItemName" 
+	    						ng-repeat="invention in blueprint.data.tech2Invention">
+								<span ng-bind-html="typeImage(invention.tech2ItemId,32)"></span>
+	    						{{invention.tech2ItemName}} 
 	    						<span class="badge">{{invention.baseProbability * 100}}%
 	    						</span>
 	    					</div>

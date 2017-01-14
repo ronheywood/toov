@@ -18,6 +18,16 @@
 					 return _.uniq(materialList);
 			   }
 
+			   var uniqueIndustryOutputTypeIdList = function(){
+
+					 return _.chain($scope.blueprints)
+					 .pluck('data')
+					 .pluck('tech2Invention').flatten()
+					 .pluck('blueprintCreatesId')
+					 .uniq()
+					 .value();
+			   }
+
 			   var getMarketPrices = function(){
 
 					 var query = 'typeid='+uniqueMaterialTypeIdList().join(',') + '&regionlimit=10000002';
@@ -62,6 +72,34 @@
 
 			   }
 
+			   var embelishWithMarketSellPrice = function( marketPrice ){
+			   		
+			   		var match = null;
+
+			   		$scope.blueprints.forEach( function(bp){
+			   			bp.data.tech2Invention.forEach(function(i){
+			   				
+			   				if(i.blueprintCreatesId == marketPrice.data.id ){
+			   					bp.data.InventoryMarketPrice = marketPrice;
+			   				}
+			   			});
+			   		});
+
+			   }
+
+			   var getBlueprintMarketPrices = function(){
+
+					 var query = 'typeid='+uniqueIndustryOutputTypeIdList().join(',') + '&regionlimit=10000002';
+					 
+					 marketService.get('/marketstat?'+query)
+					 .then(function(prices){
+			   			var parsed = xml.parse(prices).type;
+			   			parsed.forEach(function(mp,i){
+			   				embelishWithMarketSellPrice(mp);
+			   			})
+					 });
+			   }
+
 			   var embelishWithMaterials = function(material){
 			   		
 			   		_.filter( $scope.blueprints, function(bp){ return bp.data.typeID == material.typeID})
@@ -82,6 +120,8 @@
 							blueprints.data.forEach(function(t2,i){
 								embelishWithT2(t2);
 							});
+
+							getBlueprintMarketPrices(); 
 
 					    });
 			   }
@@ -132,6 +172,10 @@
 			   		return $sce.trustAsHtml(images.imageForInventoryType(bp.id, width));
 			   }
 
+			   $scope.typeImage = function(typeId,width){
+			   		return $sce.trustAsHtml(images.imageForInventoryType(typeId, width));
+			   }
+
 			   $scope.showBlueprintData = function(bp){
 
 				    _self.currentBlueprint = bp;
@@ -141,11 +185,13 @@
 
 			   $scope.industryCost = function( bp ){
 			   		if(bp == undefined) return '';
+			   		if(bp.data.materials == undefined) return '';
 
 			   		var marketAvg = 0.00;
 
 			   		bp.data.materials
 			   		.forEach(function(m){
+			   			if(m.materialPrice == undefined) return;
 			   			//console.log( parseFloat(mp.avg['#text']) );
 			   			marketAvg += parseFloat( m.marketPrice.avg['#text'] ) * m.quantity;
 			   		});

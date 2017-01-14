@@ -11,21 +11,23 @@ class Blueprint extends Model
 	public static function GetBlueprintInventables(Array $blueprintTypeIdList){
 
 		return DB::select('SELECT 
-            input.typeId as blueprintCopyId,
-            input.typeName as Input,
-            output.typeName as Invents,
-            output.typeId as inventedBlueprintId,
-            productBlueprintBuilds.typeId as outputs,
-            productBlueprintBuildItem.typeName as Produces,
-            pb.probability as baseProbability
-        FROM 
-            industryactivityprobabilities pb
-        JOIN invtypes input on pb.typeId = input.typeId
-        JOIN invtypes output on pb.productTypeId = output.typeId
-        JOIN eve.industryactivityproducts productBlueprintBuilds on output.typeId = productBlueprintBuilds.typeId
-        JOIN invtypes productBlueprintBuildItem on productBlueprintBuilds.productTypeId = productBlueprintBuildItem.typeId
-        WHERE 
-            pb.typeid in('.implode(',',$blueprintTypeIdList).')');
+			bp.typeId as blueprintCopyId,
+		    bp.typeName as Input,
+		    originBlueprintBuilds.productTypeId as blueprintCreatesId,
+		    output.typeName as Product,
+		    output.typeId as productBlueprintId,
+		    productBlueprintBuilds.productTypeId as tech2ItemId,
+		    productBlueprintBuildItem.typeName as tech2ItemName,
+		    pb.probability as baseProbability
+		FROM 
+		invtypes bp
+		JOIN eve.industryactivityproducts originBlueprintBuilds ON bp.typeId = originBlueprintBuilds.typeId and originBlueprintBuilds.activityId = 1
+		LEFT OUTER JOIN industryactivityprobabilities pb on bp.typeid = pb.typeid
+		LEFT OUTER JOIN invtypes input ON pb.typeId = input.typeId
+		LEFT OUTER JOIN invtypes output ON pb.productTypeId = output.typeId
+		LEFT OUTER JOIN eve.industryactivityproducts productBlueprintBuilds ON output.typeId = productBlueprintBuilds.typeId
+		LEFT OUTER JOIN invtypes productBlueprintBuildItem ON productBlueprintBuilds.productTypeId = productBlueprintBuildItem.typeId
+        WHERE bp.typeid in('.implode(',',$blueprintTypeIdList).')');
 
 	}
 
