@@ -10,4 +10,4 @@
 		    return output;
 		}
 
-		var myModule = angular.module('Eve',[]);
+		var myModule = angular.module('Eve',['masonry']);

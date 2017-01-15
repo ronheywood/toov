@@ -1,3 +1,14 @@
+Number.prototype.formatMoney = function(c, d, t){
+var n = this, 
+    c = isNaN(c = Math.abs(c)) ? 2 : c, 
+    d = d == undefined ? "." : d, 
+    t = t == undefined ? "," : t, 
+    s = n < 0 ? "-" : "", 
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))), 
+    j = (j = i.length) > 3 ? j % 3 : 0;
+   return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+ };
+
 (function(){
 	angular.module('Eve')
 		.controller("BlueprintsController",['$scope','marketService','xmlService','_','$http', '$sce', 'character','xml','images',
@@ -30,7 +41,7 @@
 
 			   var getMarketPrices = function(){
 
-					 var query = 'typeid='+uniqueMaterialTypeIdList().join(',') + '&regionlimit=10000002';
+					 var query = 'typeid='+uniqueMaterialTypeIdList().join(',') + '&regionlimit=10000043';
 					 
 					 marketService.get('/marketstat?'+query)
 					 .then(function(prices){
@@ -89,7 +100,7 @@
 
 			   var getBlueprintMarketPrices = function(){
 
-					 var query = 'typeid='+uniqueIndustryOutputTypeIdList().join(',') + '&regionlimit=10000002';
+					 var query = 'typeid='+uniqueIndustryOutputTypeIdList().join(',') + '&regionlimit=10000043';
 					 
 					 marketService.get('/marketstat?'+query)
 					 .then(function(prices){
@@ -161,15 +172,36 @@
 			   		return list;
 			   }
 
-			   $scope.blueprintImage = function(bp,width){
-			   		
-			   		if(bp == undefined && _self.currentBlueprint == undefined) return '';
+			   var blueprintImageDefaults = function(bp,width){
+
+			   		if(bp == undefined && _self.currentBlueprint == undefined) throw {};
 
 			   		bp = bp || _self.currentBlueprint;
 			   		bp.id = bp.id || bp.data.typeID;
 			   		width = width || 64;
+			   		return {
+			   			'blueprint': bp,
+			   			'width': width
+			   		}
+			   }
 
-			   		return $sce.trustAsHtml(images.imageForInventoryType(bp.id, width));
+			   $scope.blueprintImageUrl = function(bp,width){
+			   		
+			   		try {
+			   			var opt = blueprintImageDefaults(bp,width);
+			   		} catch(e){ return ''; }
+
+			   		return images.inventoryTypeImageUrl(opt.blueprint.id, opt.width);
+			   }
+
+			   $scope.blueprintImage = function(bp,width){
+			   		
+			   		try {
+			   			var opt = blueprintImageDefaults(bp,width);
+			   		} catch(e){ return ''; }
+
+			   		return $sce.trustAsHtml(images.imageForInventoryType(opt.blueprint.id, opt.width));
+
 			   }
 
 			   $scope.typeImage = function(typeId,width){
@@ -181,9 +213,29 @@
 				    _self.currentBlueprint = bp;
 					$scope.currentBlueprint = bp;
 
+					document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+			   }
+
+			   $scope.marketSellPriceHtml = function(bp){
+
+			   		if(bp == undefined) return '';
+			   		if(bp.data.materials == undefined) return '';
+			   		if(bp.data.InventoryMarketPrice == undefined) return '';
+
+			   		var price = parseFloat( bp.data.InventoryMarketPrice.sell.avg['#text'] );
+			   		return $sce.trustAsHtml('' + price.formatMoney(2));
+			   }
+
+			   $scope.materialCost = function( material ){
+			   		var cost = parseFloat(material.marketPrice.avg['#text']);
+			   		var qty = material.quantity;
+
+			   		return $sce.trustAsHtml('' + (cost * qty).formatMoney(2));
 			   }
 
 			   $scope.industryCost = function( bp ){
+
 			   		if(bp == undefined) return '';
 			   		if(bp.data.materials == undefined) return '';
 
@@ -191,12 +243,39 @@
 
 			   		bp.data.materials
 			   		.forEach(function(m){
-			   			if(m.materialPrice == undefined) return;
+			   			if(m.marketPrice == undefined) return;
 			   			//console.log( parseFloat(mp.avg['#text']) );
 			   			marketAvg += parseFloat( m.marketPrice.avg['#text'] ) * m.quantity;
 			   		});
 
-			   		return $sce.trustAsHtml( '' +marketAvg );
+			   		return $sce.trustAsHtml( '' + marketAvg.formatMoney(2) );
+			   }
+
+			   $scope.industryProfit = function( bp ){
+
+			   		if(bp == undefined) return 0;
+			   		if(bp.data.materials == undefined) return 0;
+			   		if(bp.data.InventoryMarketPrice == undefined) return 0;
+			   		var marketAvg = 0.00;
+
+			   		bp.data.materials
+			   		.forEach(function(m){
+			   			if(m.marketPrice == undefined) return;
+			   			//console.log( parseFloat(mp.avg['#text']) );
+			   			marketAvg += parseFloat( m.marketPrice.avg['#text'] ) * m.quantity;
+			   		});
+
+			   		sell = bp.data.tech2Invention[0].blueprintCreatesQuantity * parseFloat(bp.data.InventoryMarketPrice.sell.avg['#text']);
+			   		return (sell - marketAvg);
+			   }
+
+			   $scope.industryProfitHtml = function(bp){
+			   	var profit = $scope.industryProfit(bp);
+			   	return $sce.trustAsHtml( ''+ profit.formatMoney(2) );
+			   }
+
+			   $scope.money = function(s){
+			   	 return $sce.trustAsHtml( ''+parseFloat(s).formatMoney(2) );
 			   }
 
 		}])

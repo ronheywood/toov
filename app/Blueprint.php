@@ -14,6 +14,7 @@ class Blueprint extends Model
 			bp.typeId as blueprintCopyId,
 		    bp.typeName as Input,
 		    originBlueprintBuilds.productTypeId as blueprintCreatesId,
+		    originBlueprintBuilds.quantity as blueprintCreatesQuantity,
 		    output.typeName as Product,
 		    output.typeId as productBlueprintId,
 		    productBlueprintBuilds.productTypeId as tech2ItemId,

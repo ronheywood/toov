@@ -4,13 +4,18 @@
 
 		var images = {
 
+			inventoryTypeImageUrl: function(typeId,width){
+
+		   		width = width || 64;
+		   		return 'https://imageserver.eveonline.com/Type/%d_%d.png'.format(typeId,width);
+
+			},
+
 			imageForInventoryType : function(typeId,width){ 
 				   		
 		   		width = width || 64;
-		   		var url = 
-		   		'https://imageserver.eveonline.com/Type/%d_%d.png'.format(typeId,width);
 
-		   		var image = '<img src="'+ url +'" />';
+		   		var image = '<img src="'+ this.inventoryTypeImageUrl(typeId,width) +'" />';
 		   		
 		   		return image;
 			},
