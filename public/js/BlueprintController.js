@@ -234,19 +234,28 @@ var n = this,
 			   		return $sce.trustAsHtml('' + (cost * qty).formatMoney(2));
 			   }
 
-			   $scope.industryCost = function( bp ){
+			   $scope.industryCost = function( bp, runs ){
 
 			   		if(bp == undefined) return '';
 			   		if(bp.data.materials == undefined) return '';
 
+			   		runs = runs || 1;
 			   		var marketAvg = 0.00;
+
+			   		// 0 to 10 as a reduction is 0.9 through to 1;
+			   		var materialModifier =  (100 - bp.data.materialEfficiency) /100;
+			   		
 
 			   		bp.data.materials
 			   		.forEach(function(m){
 			   			if(m.marketPrice == undefined) return;
-			   			//console.log( parseFloat(mp.avg['#text']) );
-			   			marketAvg += parseFloat( m.marketPrice.avg['#text'] ) * m.quantity;
+			   			var baseQuantity = m.quantity;
+			   			var required = Math.max(runs, Math.ceil(Math.round(runs * baseQuantity * materialModifier, 2)));
+
+			   			marketAvg += parseFloat( m.marketPrice.avg['#text'] ) * required;
 			   		});
+
+			   		
 
 			   		return $sce.trustAsHtml( '' + marketAvg.formatMoney(2) );
 			   }
