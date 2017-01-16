@@ -10,14 +10,18 @@ class Blueprint extends Model
 	
 	private static $baseSQL = 'SELECT 
 			bp.typeId as blueprintCopyId,
-		    bp.typeName as Input,
+		    bp.typeName as typeName,
 		    originBlueprintBuilds.productTypeId as blueprintCreatesId,
 		    originBlueprintBuilds.quantity as blueprintCreatesQuantity,
 		    output.typeName as Product,
 		    output.typeId as productBlueprintId,
 		    productBlueprintBuilds.productTypeId as tech2ItemId,
 		    productBlueprintBuildItem.typeName as tech2ItemName,
-		    pb.probability as baseProbability
+		    pb.probability as baseProbability,
+		    0 as runs,
+		    1 as quantity,
+		    0 as materialEfficiency,
+		    0 as timeEfficiency
 		FROM 
 		invtypes bp
 		JOIN eve.industryactivityproducts originBlueprintBuilds ON bp.typeId = originBlueprintBuilds.typeId and originBlueprintBuilds.activityId = 1

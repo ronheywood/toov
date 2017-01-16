@@ -5,17 +5,17 @@
 			<div class="panel-body">
 
 				<span ng-bind-html="blueprintImage(currentBlueprint)"></span>
-				{{currentBlueprint.data.typeName}}
+				{{currentBlueprint.typeName}}
 
-				<div ng-show="currentBlueprint.data.tech2Invention">
+				<div ng-show="currentBlueprint.tech2ItemName">
 
 					<h3 >Invention</h3>
 
-					<div ng-repeat="invention in currentBlueprint.data.tech2Invention">
+					<div>
 
-						<span ng-bind-html="typeImage(invention.tech2ItemId,32)"></span>
-						{{invention.tech2ItemName}} 
-						<span class="badge">{{invention.baseProbability * 100}}%</span>
+						<span ng-bind-html="typeImage(blueprint.tech2ItemId,32)"></span>
+						{{blueprint.tech2ItemName}} 
+						<span class="badge">{{blueprint.baseProbability * 100}}%</span>
 						
 					</div>
 
@@ -26,7 +26,7 @@
 					<h3>Industry Materials</h3>
 
 					<table class="table">
-					<tr ng-repeat="material in currentBlueprint.data.materials">
+					<tr ng-repeat="material in currentBlueprint.materials">
 
 						<td>{{material.typeName}} </td>
 
@@ -55,6 +55,7 @@
 		</div>
 
 		<section>
+
 		<div class="blueprint col col-md-3 col-sm-3 col-xs-5" ng-repeat="blueprint in blueprints | orderBy: industryProfit : true"
 		>
 			
@@ -65,14 +66,14 @@
 					ng-click="showBlueprintData(blueprint);"></span>
 
 					<a class="blueprint-name" ng-click="showBlueprintData(blueprint);">
-						 {{blueprint.data.typeName}}
-						 {{blueprint.data.quantity == -2 ? '(copy)' : ''}}
+						 {{blueprint.typeName}}
+						 {{blueprint.quantity == -2 ? '(copy)' : ''}}
 					</a>
-					<span class="badge" ng-show=" blueprint.data.quantity == -2">
-						{{blueprint.data.runs}} runs
+					<span class="badge" ng-show=" blueprint.quantity == -2">
+						{{blueprint.runs}} runs
 					</span>
 
-					<span class="label label-success" ng-show=" blueprint.data.quantity > 0">
+					<span class="label label-success" ng-show=" blueprint.quantity > 0">
 						NEW
 					</span>
 
@@ -80,15 +81,15 @@
 				<ul class="list-group">
 					
 					<li class="list-group-item">
-					Research: {{blueprint.data.materialEfficiency}} /
-					{{blueprint.data.timeEfficiency}}</li>
+					Research: {{blueprint.materialEfficiency}} /
+					{{blueprint.timeEfficiency}}</li>
 					<li class="list-group-item">
 						
 						Sell ISK
 						<span ng-bind-html="marketSellPriceHtml(blueprint)">
 						</span>
 						
-						x {{ blueprint.data.tech2Invention[0].blueprintCreatesQuantity }}
+						x {{ blueprint.blueprintCreatesQuantity }}
 					</li>
 					<li class="list-group-item">
 						
@@ -103,10 +104,10 @@
 						</span>
 					</li>
 
-					<li class="list-group-item" ng-show="blueprint.data.tech2Invention[0].tech2ItemName">
-						{{ blueprint.data.tech2Invention.length }} T2 Variant
+					<li class="list-group-item" ng-show="blueprint.tech2ItemName">
+						{{ blueprint.length }} T2 Variant
 					</li>
-					<li class="list-group-item" ng-hide="blueprint.data.tech2Invention[0].tech2ItemName">
+					<li class="list-group-item" ng-hide="blueprint.tech2ItemName">
 						No T2 Variant
 					</li>
 				</ul>

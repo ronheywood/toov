@@ -14,13 +14,11 @@ var n = this,
 		.controller("BlueprintsController",['$scope','marketService','xmlService','_','$http', '$sce', 'character','xml','images',
 			function($scope,marketService,xmlService, _ , $http, $sce,character,xml,images){
 
-			   var action = 'char/Blueprints.xml.aspx?characterId=%d&keyID=%d&vCode=%s&flat=1';
 			   _self = this;
 
 			   var uniqueMaterialTypeIdList = function(){
 
 			   		 var materialList = _.chain($scope.blueprints)
-			   		 .pluck('data')
 					 .pluck('materials')
 					 .flatten()
 					 .pluck('materialTypeID')
@@ -32,7 +30,6 @@ var n = this,
 			   var uniqueIndustryOutputTypeIdList = function(){
 
 					 return _.chain($scope.blueprints)
-					 .pluck('data')
 					 .pluck('tech2Invention').flatten()
 					 .pluck('blueprintCreatesId')
 					 .uniq()
@@ -64,7 +61,7 @@ var n = this,
 			   		$scope.blueprints.forEach(
 			   			function(bp){
 
-			   				bp.data.materials.forEach(function(m,i){
+			   				bp.materials.forEach(function(m,i){
 			   					m.marketPrice = _self.materialPrices[m.materialTypeID];
 			   				});
 			   				
@@ -73,11 +70,11 @@ var n = this,
 			   }
 
 			   var embelishWithT2 = function(t2){
-			   		_.filter( $scope.blueprints, function(bp){ return bp.data.typeName == t2.Input})
+			   		_.filter( $scope.blueprints, function(bp){ return bp.typeName == t2.Input})
 			   		.forEach(
 			   			function(bp,i){
-				   			bp.data.tech2Invention =  bp.data.tech2Invention || [];
-			   				bp.data.tech2Invention.push(t2);
+				   			bp.tech2Invention =  bp.tech2Invention || [];
+			   				bp.tech2Invention.push(t2);
 			   			}
 			   		);
 
@@ -88,12 +85,9 @@ var n = this,
 			   		var match = null;
 
 			   		$scope.blueprints.forEach( function(bp){
-			   			bp.data.tech2Invention.forEach(function(i){
-			   				
-			   				if(i.blueprintCreatesId == marketPrice.data.id ){
-			   					bp.data.InventoryMarketPrice = marketPrice;
-			   				}
-			   			});
+		   				if(bp.blueprintCreatesId == marketPrice.data.id ){
+		   					bp.InventoryMarketPrice = marketPrice;
+		   				}
 			   		});
 
 			   }
@@ -113,11 +107,11 @@ var n = this,
 
 			   var embelishWithMaterials = function(material){
 			   		
-			   		_.filter( $scope.blueprints, function(bp){ return bp.data.typeID == material.typeID})
+			   		_.filter( $scope.blueprints, function(bp){ return bp.blueprintCopyId == material.typeID})
 			   		.forEach(
 			   			function(bp,i){
-				   				bp.data.materials =  bp.data.materials || [];
-				   				bp.data.materials.push(material);
+				   				bp.materials =  bp.materials || [];
+				   				bp.materials.push(material);
 			   			}
 			   		);
 
@@ -128,7 +122,7 @@ var n = this,
 			   		$http.get('/blueprints/'+inputList).then(
 					   	function(blueprints) {
 
-							blueprints.data.forEach(function(t2,i){
+							blueprints.forEach(function(t2,i){
 								embelishWithT2(t2);
 							});
 
@@ -151,23 +145,42 @@ var n = this,
 					    });
 			   }
 			   
-			   xmlService.get(action.format(character.id,character.api_key,character.api_vcode)).then(
-			   	function(blueprints) {
+			   /*
+			   *	The EVE Api doesn't return blueprints in Citadels using this list
+			   *	the app uses AssetList and selects blueprints from there
+			   *	but time and matrial reseach is only returned by the blueprints service
+			   *
+			   */
+			   $scope.NpsBlueprintsWithResearch = function () {
+			   	   var action = 'char/Blueprints.xml.aspx?characterId=%d&keyID=%d&vCode=%s&flat=1';
+				   xmlService.get(action.format(character.id,character.api_key,character.api_vcode)).then(
+				   	function(blueprints) {
 
-			   		var parsed = xml.parse(blueprints);
-			        _self.blueprints = parsed.rowset.row;
-			        $scope.blueprints = _self.blueprints;
+				   		var parsed = xml.parse(blueprints);
+				        /*TODO: 
+					        Overload assetListBlueprint 
+					        materialEfficiency and timeEfficiency
+					        properties
+				        */
 
-					getIndustryMaterials();
-					getTech2Inventions(); 
+				    });
+				}
 
-			    });
+			    $http.get( '/blueprints?characterId=%d&keyID=%d&vCode=%s'.format(character.id,character.api_key,character.api_vcode) )
+			    .then(
+			    	function(blueprints) {
+			    		_self.blueprints = blueprints.data;
+			        	$scope.blueprints = _self.blueprints;
+
+			        	getIndustryMaterials();
+			    	}
+			    );
 
 			   var knownBlueprints = function(){
 
 			   		var list = [];
 			   		_self.blueprints.forEach(function(bp,i){
-			   			list.push(parseInt(bp.data.typeID));
+			   			list.push(parseInt(bp.blueprintCopyId));
 			   		})
 			   		return list;
 			   }
@@ -177,7 +190,7 @@ var n = this,
 			   		if(bp == undefined && _self.currentBlueprint == undefined) throw {};
 
 			   		bp = bp || _self.currentBlueprint;
-			   		bp.id = bp.id || bp.data.typeID;
+			   		bp.id = bp.id || bp.blueprintCopyId;
 			   		width = width || 64;
 			   		return {
 			   			'blueprint': bp,
@@ -218,12 +231,11 @@ var n = this,
 			   }
 
 			   $scope.marketSellPriceHtml = function(bp){
-
 			   		if(bp == undefined) return '';
-			   		if(bp.data.materials == undefined) return '';
-			   		if(bp.data.InventoryMarketPrice == undefined) return '';
+			   		if(bp.materials == undefined) return '';
+			   		if(bp.InventoryMarketPrice == undefined) return '';
 
-			   		var price = parseFloat( bp.data.InventoryMarketPrice.sell.avg['#text'] );
+			   		var price = parseFloat( bp.InventoryMarketPrice.sell.avg['#text'] );
 			   		return $sce.trustAsHtml('' + price.formatMoney(2));
 			   }
 
@@ -237,16 +249,16 @@ var n = this,
 			   $scope.industryCost = function( bp, runs ){
 
 			   		if(bp == undefined) return '';
-			   		if(bp.data.materials == undefined) return '';
+			   		if(bp.materials == undefined) return '';
 
 			   		runs = runs || 1;
 			   		var marketAvg = 0.00;
 
 			   		// 0 to 10 as a reduction is 0.9 through to 1;
-			   		var materialModifier =  (100 - bp.data.materialEfficiency) /100;
+			   		var materialModifier =  (100 - bp.materialEfficiency) /100;
 			   		
 
-			   		bp.data.materials
+			   		bp.materials
 			   		.forEach(function(m){
 			   			if(m.marketPrice == undefined) return;
 			   			var baseQuantity = m.quantity;
@@ -263,22 +275,23 @@ var n = this,
 			   $scope.industryProfit = function( bp ){
 
 			   		if(bp == undefined) return 0;
-			   		if(bp.data.materials == undefined) return 0;
-			   		if(bp.data.InventoryMarketPrice == undefined) return 0;
+			   		if(bp.materials == undefined) return 0;
+			   		if(bp.InventoryMarketPrice == undefined) return 0;
 			   		var marketAvg = 0.00;
-
-			   		bp.data.materials
+			   		console.log(bp);
+			   		bp.materials
 			   		.forEach(function(m){
 			   			if(m.marketPrice == undefined) return;
 			   			//console.log( parseFloat(mp.avg['#text']) );
 			   			marketAvg += parseFloat( m.marketPrice.avg['#text'] ) * m.quantity;
 			   		});
 
-			   		sell = bp.data.tech2Invention[0].blueprintCreatesQuantity * parseFloat(bp.data.InventoryMarketPrice.sell.avg['#text']);
+			   		sell = bp.blueprintCreatesQuantity * parseFloat(bp.InventoryMarketPrice.sell.avg['#text']);
 			   		return (sell - marketAvg);
 			   }
 
 			   $scope.industryProfitHtml = function(bp){
+			   	console.log(bp);
 			   	var profit = $scope.industryProfit(bp);
 			   	return $sce.trustAsHtml( ''+ profit.formatMoney(2) );
 			   }
