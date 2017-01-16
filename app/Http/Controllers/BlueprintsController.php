@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+
 use App\Blueprint;
 use App\Mineral;
 
@@ -32,6 +34,20 @@ class BlueprintsController extends Controller
         
         return response()->json( Blueprint::IndustryActivityMaterials($blueprints) );
 
+    }
+
+    public function blueprintsFromAssetList(Request $request){
+
+        $characterId = $request->input('characterId');
+        $keyID = $request->input('keyID');
+        $apiVCode = $request->input('vCode');
+        
+        if(empty($characterId) || empty($keyID) || empty($apiVCode) ) return response()->json([]);
+
+        
+        return response()->json( 
+            Blueprint::GetBlueprintsFromAssetList($characterId, $keyID, $apiVCode) 
+            );
     }
 
     //

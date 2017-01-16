@@ -8,9 +8,7 @@ use DB;
 class Blueprint extends Model
 {
 	
-	public static function GetBlueprintInventables(Array $blueprintTypeIdList){
-
-		return DB::select('SELECT 
+	private static $baseSQL = 'SELECT 
 			bp.typeId as blueprintCopyId,
 		    bp.typeName as Input,
 		    originBlueprintBuilds.productTypeId as blueprintCreatesId,
@@ -28,7 +26,48 @@ class Blueprint extends Model
 		LEFT OUTER JOIN invtypes output ON pb.productTypeId = output.typeId
 		LEFT OUTER JOIN eve.industryactivityproducts productBlueprintBuilds ON output.typeId = productBlueprintBuilds.typeId
 		LEFT OUTER JOIN invtypes productBlueprintBuildItem ON productBlueprintBuilds.productTypeId = productBlueprintBuildItem.typeId
-        WHERE bp.typeid in('.implode(',',$blueprintTypeIdList).')');
+        WHERE 
+        bp.typeName like \'%Blueprint\'';
+
+	public static function GetBlueprintInventables(Array $blueprintTypeIdList){
+
+		return DB::select( self::$baseSQL . ' AND bp.typeid in('.implode(',',$blueprintTypeIdList).')');
+
+	}
+
+	public static function GetBlueprintsFromAssetList($charId, $apiKey, $apiVCode){
+
+		$assetList = file_get_contents("https://api.eveonline.com/char/AssetList.xml.aspx?characterId={$charId}&keyID={$apiKey}&vCode={$apiVCode}&flat=1");
+
+		$xml = simplexml_load_string($assetList) or die("Error: Cannot create object");
+
+		return self::mergeBlueprintsFromAssetList($xml->result->rowset); 
+ 
+	}
+
+	private static function mergeBlueprintsFromAssetList($assetList){
+		
+		$blueprintTypes = self::allBlueprints();
+		$blueprints = array();
+		
+		$attributes= '@attributes';
+
+		foreach($assetList->children() as $key=>$asset){
+			foreach($blueprintTypes as $key=>$blueprint){
+				
+				if( (int) $asset["typeID"] == $blueprint->blueprintCopyId){
+					array_push($blueprints,  $blueprint);
+					continue;
+				}
+			}
+		}
+
+		return $blueprints;
+	}
+
+	private static function allBlueprints(){
+
+		return DB::select(self::$baseSQL);
 
 	}
 
