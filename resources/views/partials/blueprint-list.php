@@ -56,8 +56,7 @@
 
 		<section>
 
-		<div class="blueprint col col-md-3 col-sm-3 col-xs-5" ng-repeat="blueprint in blueprints | orderBy: industryProfit : true"
-		>
+		<div class="blueprint col col-lg-2 col-md-3 col-sm-3 col-xs-5 col-xs-offset-1 " ng-repeat="blueprint in blueprints | orderBy: industryProfit : true">
 			
 			<div class="panel panel-default" data-blueprint="">
 				<div class="panel-body">
@@ -85,7 +84,7 @@
 					{{blueprint.timeEfficiency}}</li>
 					<li class="list-group-item">
 						
-						Sell ISK
+						Sell ISK <br />
 						<span ng-bind-html="marketSellPriceHtml(blueprint)">
 						</span>
 						
@@ -93,13 +92,14 @@
 					</li>
 					<li class="list-group-item">
 						
-						Manufacturing ISK 
+						Manufacturing <span>ISK</span>
+						<br />
 						<span ng-bind-html="industryCost(blueprint)">
 						</span>
 					</li>
 					<li class="list-group-item">
 						
-						Profit ISK 
+						Profit ISK <br/>
 						<span ng-bind-html="industryProfitHtml(blueprint)">
 						</span>
 					</li>
