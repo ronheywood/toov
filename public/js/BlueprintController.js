@@ -30,7 +30,6 @@ var n = this,
 			   var uniqueIndustryOutputTypeIdList = function(){
 
 					 return _.chain($scope.blueprints)
-					 .pluck('tech2Invention').flatten()
 					 .pluck('blueprintCreatesId')
 					 .uniq()
 					 .value();
@@ -173,6 +172,7 @@ var n = this,
 			        	$scope.blueprints = _self.blueprints;
 
 			        	getIndustryMaterials();
+			        	getBlueprintMarketPrices();
 			    	}
 			    );
 
@@ -276,7 +276,9 @@ var n = this,
 
 			   		if(bp == undefined) return 0;
 			   		if(bp.materials == undefined) return 0;
+
 			   		if(bp.InventoryMarketPrice == undefined) return 0;
+
 			   		var marketAvg = 0.00;
 			   		console.log(bp);
 			   		bp.materials
@@ -291,7 +293,7 @@ var n = this,
 			   }
 
 			   $scope.industryProfitHtml = function(bp){
-			   	console.log(bp);
+			   	
 			   	var profit = $scope.industryProfit(bp);
 			   	return $sce.trustAsHtml( ''+ profit.formatMoney(2) );
 			   }
