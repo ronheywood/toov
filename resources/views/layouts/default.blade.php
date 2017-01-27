@@ -22,8 +22,10 @@
 	  <span class="navbar-brand" ng-bind-html="characterImage(64)"></span>
 	  <a class="navbar-brand" href="#" ng-bind="character.name"></a>
 
-	  <ul class="nav navbar-nav">
-	   <li><a href="#">Blueprints</a></li>
+	  <p class="clearfix"/><p/><p/>
+	  <ul class="nav navbar-nav" ng-hide="requireLogin">
+	   <li><a href="/">Blueprints</a></li>
+	   <li><a href="/logout">Log Out</a></li>
 	  </ul>
 
 			<div id="loginModal" ng-class="requireLogin ? 'modal show' : 'ng-hide'" role="dialog" style="display: auto;">
