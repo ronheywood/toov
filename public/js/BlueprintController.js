@@ -97,7 +97,8 @@ var n = this,
 					 
 					 marketService.get('/marketstat?'+query)
 					 .then(function(prices){
-			   			var parsed = xml.parse(prices).type;
+			   			var parsed = xml.parse(prices).type || [];
+			   			
 			   			parsed.forEach(function(mp,i){
 			   				embelishWithMarketSellPrice(mp);
 			   			})
@@ -151,6 +152,7 @@ var n = this,
 			   *
 			   */
 			   $scope.NpsBlueprintsWithResearch = function () {
+			   	return;
 			   	   var action = 'char/Blueprints.xml.aspx?characterId=%d&keyID=%d&vCode=%s&flat=1';
 				   xmlService.get(action.format(character.id,character.api_key,character.api_vcode)).then(
 				   	function(blueprints) {
@@ -164,17 +166,6 @@ var n = this,
 
 				    });
 				}
-
-			    $http.get( '/blueprints?characterId=%d&keyID=%d&vCode=%s'.format(character.id,character.api_key,character.api_vcode) )
-			    .then(
-			    	function(blueprints) {
-			    		_self.blueprints = blueprints.data;
-			        	$scope.blueprints = _self.blueprints;
-
-			        	getIndustryMaterials();
-			        	getBlueprintMarketPrices();
-			    	}
-			    );
 
 			   var knownBlueprints = function(){
 
@@ -300,6 +291,19 @@ var n = this,
 
 			   $scope.money = function(s){
 			   	 return $sce.trustAsHtml( ''+parseFloat(s).formatMoney(2) );
+			   }
+
+			   if(character.isAuthed()){
+				    $http.get( '/blueprints?characterId=%d&keyID=%d&vCode=%s'.format(character.id,character.api_key,character.api_vcode) )
+				    .then(
+				    	function(blueprints) {
+				    		_self.blueprints = blueprints.data;
+				        	$scope.blueprints = _self.blueprints;
+
+				        	getIndustryMaterials();
+				        	getBlueprintMarketPrices();
+				    	}
+				    );
 			   }
 
 		}])

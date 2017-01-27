@@ -8,23 +8,50 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.1.1/masonry.pkgd.min.js"></script>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-cookies.js"></script>
 		<script type="text/javascript" src="js/components/masonry.js"></script>
 
 		<script type="text/javascript" src="js/app.js"></script>
 	</head>
 	<body>
 
-    <div id="app" ng-app="Eve" class="row">
-    	<div class="col col-md-2 col-sm-2 hidden-xs fill welcome-fill">&nbsp</div>
-    	<div id="side-nav" class="col col-md-2 col-sm-2 hidden-xs fill">
-            @include('partials/side-nav')
-        </div>
-        
-		<div class="fill col col-md-10 col-sm-10 col-xs-10">
-            @yield('content')
-        </div>
-    </div>
+	<section id="app" ng-app="Eve">
+
+	<div class="navbar navbar-inverse navbar-fixed-left welcome-fill" ng-controller="AccountController">
+
+	  <span class="navbar-brand" ng-bind-html="characterImage(64)"></span>
+	  <a class="navbar-brand" href="#" ng-bind="character.name"></a>
+
+	  <ul class="nav navbar-nav">
+	   <li><a href="#">Blueprints</a></li>
+	  </ul>
+
+			<div id="loginModal" ng-class="requireLogin ? 'modal show' : 'ng-hide'" role="dialog" style="display: auto;">
+			  <div class="modal-dialog">
+
+			    <!-- Modal content-->
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal">&times;</button>
+			        <h4 class="modal-title">Login with your Eve Account</h4>
+			      </div>
+			      <div class="modal-body">
+			        <img src="https://images.contentful.com/idjq7aai9ylm/4fSjj56uD6CYwYyus4KmES/4f6385c91e6de56274d99496e6adebab/EVE_SSO_Login_Buttons_Large_Black.png?w=270&h=45" alt="Sign In" class="btn" ng-click="authenticate()"/>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+
+			  </div>
+			</div>
+
+	</div>
+
+	<div class="container">
+	 @yield('content')
+	</div>
+	</section>
 
 	<!-- TODO [prod] bundle these resources into a single minified resource -->
 

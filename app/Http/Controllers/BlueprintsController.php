@@ -16,7 +16,7 @@ class BlueprintsController extends Controller
      */
     public function __construct()
     {
-        //
+        //TODO Auth Middleware to check for bearer token in cookie
     }
 
     public function index($blueprints = []){
@@ -31,7 +31,8 @@ class BlueprintsController extends Controller
 
         if(empty($blueprints)) return response()->json($blueprints);
         if(!is_array($blueprints))  $blueprints = json_decode( $blueprints, true );
-        
+        if(empty($blueprints)) return response()->json($blueprints);
+
         return response()->json( Blueprint::IndustryActivityMaterials($blueprints) );
 
     }
@@ -39,14 +40,10 @@ class BlueprintsController extends Controller
     public function blueprintsFromAssetList(Request $request){
 
         $characterId = $request->input('characterId');
-        $keyID = $request->input('keyID');
-        $apiVCode = $request->input('vCode');
-        
-        if(empty($characterId) || empty($keyID) || empty($apiVCode) ) return response()->json([]);
-
+        if(empty($characterId)) return response()->json([]);
         
         return response()->json( 
-            Blueprint::GetBlueprintsFromAssetList($characterId, $keyID, $apiVCode) 
+            Blueprint::GetBlueprintsFromAssetList($characterId) 
             );
     }
 
