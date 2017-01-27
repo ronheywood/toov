@@ -10,4 +10,30 @@
 		    return output;
 		}
 
-		var myModule = angular.module('Eve',['ngCookies']);
+		var myModule = angular.module('Eve',['ngCookies'])
+		.factory('env', [function() {
+	  		
+	  		var dev = {
+	  			client_id: '4344fa43fd9d4114aa8823700af948c1'
+	  		};
+
+	  		var uat = {
+	  			client_id: '4344fa43fd9d4114aa8823700af948c1'
+	  		};
+
+	  		var production = {
+	  			client_id: ''
+	  		};
+
+	  		switch(window.location.hostname){
+	  			case 'localhost':
+	  				return dev;
+	  			break;
+	  			case 'toov.clients.ronheywood.co.uk':
+	  				return uat;
+	  			break;
+	  		}
+
+	  		return dev;
+
+		}]);

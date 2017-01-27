@@ -16,7 +16,7 @@ class BlueprintsController extends Controller
      */
     public function __construct()
     {
-        //TODO Auth Middleware to check for bearer token in cookie
+        //TODO Auth Middleware: (check for bearer token in cookie)
     }
 
     public function index($blueprints = []){

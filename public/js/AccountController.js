@@ -1,7 +1,7 @@
 (function(){
 	angular.module('Eve')
-	.controller("AccountController",['$scope','$cookies','crestService', '$sce', 'character','images', 
-		function($scope, $cookies,crestService, $sce,character,images){
+	.controller("AccountController",['$scope','$cookies','crestService', '$sce', 'env', 'character','images', 
+		function($scope, $cookies,crestService, $sce,env,character,images){
 
 			var _self = this;
 
@@ -18,7 +18,7 @@
 				var base_server = '%s//%s'.format(window.location.protocol,window.location.host);
 				var redirect_uri = 'redirect_uri='+ base_server +'/openauth';
 
-				var client_id = 'client_id=4344fa43fd9d4114aa8823700af948c1';
+				var client_id = 'client_id='+env.client_id;
 				var scope = 'scope=publicData+characterAssetsRead+esi-assets.read_assets.v1';
 				var action = authPath + '?%s&%s&%s&%s&%s'.format(response_type,redirect_uri,client_id,scope)
 
