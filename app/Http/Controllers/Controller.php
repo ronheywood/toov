@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Response;
 
 use App\User;
 
@@ -16,23 +17,24 @@ class Controller extends BaseController
     	$auth = User::GetAuthToken($code);
 
         if(isset($auth->error)) {
-            return view('blueprints');
+            return redirect('/');
         }
 
         $this->setAuthCookie($auth);
 		
-    	return view('blueprints');
+    	return redirect('/');
 
     }
 
     public function getRefreshAuthCode(){
+
         if(empty($_COOKIE['Auth'])){
-            return (new Response('Refresh token not found in cookies', 400));
+            return redirect('/');
         }
         $auth = json_decode($_COOKIE['Auth']);
 
         if(!isset($auth->refresh_token)){
-            return (new Response('Refresh token not found in cookies', 400));
+            return $this->getLogout();
         }
 
         $auth = User::RefreshAuthToken($auth->refresh_token);
@@ -40,6 +42,12 @@ class Controller extends BaseController
         $this->setAuthCookie($auth);
 
         return view('blueprints');
+    }
+
+    public function getLogout(){
+        $host = explode(':', $_SERVER['HTTP_HOST']);
+        setcookie('Auth', null, -1, '/', array_shift($host));
+        return redirect('/');
     }
 
     private function setAuthCookie($auth){

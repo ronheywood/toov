@@ -17,6 +17,7 @@ $app->get('/', function () use ($app) {
 
 $app->get('/openauth', 'Controller@getOpenauthCode');
 $app->get('/refreshauth', 'Controller@getRefreshAuthCode');
+$app->get('/logout', 'Controller@getLogout');
 
 $app->get('/blueprints', 'BlueprintsController@blueprintsFromAssetList');
 $app->get('/blueprints/{blueprints}', 'BlueprintsController@index');
