@@ -56,16 +56,36 @@ class Blueprint extends Model
 		$attributes= '@attributes';
 
 		foreach($assetList as $key=>$asset){
-			foreach($blueprintTypes as $key=>$blueprint){
-				
-				if( $asset->type_id == $blueprint->blueprintCopyId){
-					array_push($blueprints,  $blueprint);
-					continue;
+			$allTechMatches = self::matchBlueprintAsset($blueprintTypes,$asset);
+
+			if( count($allTechMatches) ){
+
+				$base = clone $allTechMatches[0];
+				if($base->tech2ItemId){
+					$base->tech2Invention = $allTechMatches;
+				} else {
+					$base->tech2Invention = array();
 				}
+				
+				array_push($blueprints, $base);
 			}
 		}
 
 		return $blueprints;
+	}
+
+	private static function matchBlueprintAsset($blueprintTypes,$asset) {
+
+		$allTechMatches = array();
+
+		foreach($blueprintTypes as $key=>$blueprint){
+				
+			if( $asset->type_id == $blueprint->blueprintCopyId){
+				array_push($allTechMatches, $blueprint);
+			}
+		}
+
+		return $allTechMatches;
 	}
 
 	private static function allBlueprints(){

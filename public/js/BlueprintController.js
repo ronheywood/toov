@@ -68,7 +68,7 @@ var n = this,
 			   		)
 			   }
 
-			   var embelishWithT2 = function(t2){
+			   var xembelishWithT2 = function(t2){
 			   		_.filter( $scope.blueprints, function(bp){ return bp.typeName == t2.Input})
 			   		.forEach(
 			   			function(bp,i){
@@ -140,20 +140,6 @@ var n = this,
 			   			}
 			   		);
 
-			   }
-
-			   var getTech2Inventions = function(){
-			   		var inputList = JSON.stringify(knownBlueprints());
-			   		$http.get('/blueprints/'+inputList).then(
-					   	function(blueprints) {
-
-							blueprints.forEach(function(t2,i){
-								embelishWithT2(t2);
-							});
-
-							getBlueprintMarketPrices(); 
-
-					    });
 			   }
 
 			   var getIndustryMaterials = function(){

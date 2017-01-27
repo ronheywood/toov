@@ -12,7 +12,7 @@
               },
               function(error){
                 console.error(error.status);
-                alert('CREST API http Error');
+                alert('Market API http Error');
               });
               // Return the promise to the controller
               return promise;
