@@ -30,7 +30,8 @@
 				var action = '/refreshauth';
 				window.location.replace(action);
 			},
-			id : null
+			id : null,
+			auth : null
 		}
 
 	}])

@@ -79,6 +79,31 @@ var n = this,
 
 			   }
 
+			   var embelishWithResearch = function(researchProperties){
+			   		
+			   		_.filter( $scope.blueprints, function(bp){ return bp.blueprintCopyId == researchProperties.data.typeID})
+			   		.forEach(
+			   			function(bp,i){
+
+			   				if(bp.materialEfficiency < researchProperties.data.materialEfficiency) bp.materialEfficiency = parseInt(researchProperties.data.materialEfficiency);
+			   				if(bp.timeEfficiency < researchProperties.data.timeEfficiency) bp.timeEfficiency = parseInt(researchProperties.data.timeEfficiency);
+			   				
+			   				if(researchProperties.data.runs > 0){
+			   				   bp.runs += parseInt(researchProperties.data.runs);
+			   				}
+
+			   				if(researchProperties.data.quantity>0){ 
+			   					if(bp.quantity <0) bp.quantity = 0;
+			   					bp.quantity += parseInt(researchProperties.data.quantity);
+			   				} else {
+			   					bp.quantity = parseInt(researchProperties.data.quantity);
+			   				}
+
+			   			}
+			   		);
+
+			   }
+
 			   var embelishWithMarketSellPrice = function( marketPrice ){
 			   		
 			   		var match = null;
@@ -152,17 +177,17 @@ var n = this,
 			   *
 			   */
 			   $scope.NpsBlueprintsWithResearch = function () {
-			   	return;
-			   	   var action = 'char/Blueprints.xml.aspx?characterId=%d&keyID=%d&vCode=%s&flat=1';
-				   xmlService.get(action.format(character.id,character.api_key,character.api_vcode)).then(
+			   	
+			   	   var action = 'char/Blueprints.xml.aspx?accessToken=%s&accessType=character&characterId=%d';
+
+				   xmlService.get(action.format(character.auth.access_token,character.id)).then(
 				   	function(blueprints) {
 
 				   		var parsed = xml.parse(blueprints);
-				        /*TODO: 
-					        Overload assetListBlueprint 
-					        materialEfficiency and timeEfficiency
-					        properties
-				        */
+
+				   		parsed.rowset.row.forEach(function(bp){
+				   			embelishWithResearch(bp);
+				   		});
 
 				    });
 				}
@@ -271,7 +296,7 @@ var n = this,
 			   		if(bp.InventoryMarketPrice == undefined) return 0;
 
 			   		var marketAvg = 0.00;
-			   		console.log(bp);
+			   		
 			   		bp.materials
 			   		.forEach(function(m){
 			   			if(m.marketPrice == undefined) return;
@@ -300,6 +325,7 @@ var n = this,
 				    		_self.blueprints = blueprints.data;
 				        	$scope.blueprints = _self.blueprints;
 
+				        	$scope.NpsBlueprintsWithResearch();
 				        	getIndustryMaterials();
 				        	getBlueprintMarketPrices();
 				    	}

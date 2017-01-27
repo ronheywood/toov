@@ -16,7 +16,7 @@
 		   		var response_type = 'response_type=code';
 				var redirect_uri = 'redirect_uri=http://localhost:8000/openauth';
 				var client_id = 'client_id=4344fa43fd9d4114aa8823700af948c1';
-				var scope = 'scope=publicData+characterFittingsWrite+esi-killmails.read_killmails.v1+esi-assets.read_assets.v1';
+				var scope = 'scope=publicData+characterFittingsWrite+characterAssetsRead+esi-killmails.read_killmails.v1+esi-assets.read_assets.v1';
 				var action = authPath + '?%s&%s&%s&%s&%s'.format(response_type,redirect_uri,client_id,scope)
 
 				var config = "toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=350,height=410,left=50,top=50,titlebar=yes";
