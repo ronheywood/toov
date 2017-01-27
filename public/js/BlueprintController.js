@@ -305,7 +305,7 @@ var n = this,
 			   }
 
 			   if(character.isAuthed()){
-				    $http.get( '/blueprints?characterId=%d&keyID=%d&vCode=%s'.format(character.id,character.api_key,character.api_vcode) )
+				    $http.get( '/blueprints?characterId=%d'.format(character.id) )
 				    .then(
 				    	function(blueprints) {
 				    		_self.blueprints = blueprints.data;
