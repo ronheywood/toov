@@ -11,6 +11,16 @@
 		}
 
 		var myModule = angular.module('Eve',['ngCookies'])
+		.directive('toggleNav', [function() {
+			return {
+			    restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
+			    link: function($scope, iElm, iAttrs, controller) {
+			      iElm.bind("click", function(){
+			         angular.element(document.querySelector( '.row-offcanvas' )).toggleClass('active');
+			      })
+			    }
+			  };
+		}])
 		.factory('env', [function() {
 	  		
 	  		var dev = {

@@ -1,4 +1,4 @@
-<section ng-controller="BlueprintsController" class="row">
+<section ng-controller="BlueprintsController" class="bp-card row">
 
 		<div class="panel panel-default col col-md-10 col-md-offset-1" ng-show="currentBlueprint">
 
@@ -104,11 +104,13 @@
 						</span>
 					</li>
 
-					<li class="list-group-item" ng-show="blueprint.tech2ItemName">
-						{{ blueprint.length }} T2 Variant
+					<li class="list-group-item" ng-show="blueprint.tech2ItemId">
+						{{ blueprint.tech2Invention.length }} Invention<span ng-hide="blueprint.tech2Invention.length==1">s</span>
+						<div>{{ blueprint.baseProbability*100 }}% base probability of success</div>
 					</li>
-					<li class="list-group-item" ng-hide="blueprint.tech2ItemName">
-						No T2 Variant
+					<li class="list-group-item" ng-hide="blueprint.tech2ItemId">
+						No Science Inventions Available
+						<div>&nbsp;</div>
 					</li>
 				</ul>
 			</div>

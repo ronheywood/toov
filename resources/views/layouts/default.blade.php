@@ -1,5 +1,7 @@
 <html>
 	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css"/>
 
@@ -15,41 +17,43 @@
 	</head>
 	<body>
 
-	<section id="app" ng-app="Eve">
+<div class="page-container" id="app" ng-app="Eve">
+  
+	<!-- top navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation" ng-controller="AccountController">
+       <div class="container">
+    	<div class="navbar-header">
 
-	<div class="navbar navbar-inverse navbar-fixed-left welcome-fill" ng-controller="AccountController">
+           <button type="button" toggle-nav class="navbar-toggle" data-toggle="offcanvas" data-target=".sidebar-nav">
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+           </button>
 
-	  <span class="navbar-brand" ng-bind-html="characterImage(64)"></span>
-	  <a class="navbar-brand" href="#" ng-bind="character.name"></a>
+           <a class="navbar-brand" href="#">Toov Corp Management</a>
 
-	  <p class="clearfix"/><p/><p/>
-	  <ul class="nav navbar-nav" ng-hide="requireLogin">
-	   <li><a href="/">Blueprints</a></li>
-	   <li><a href="/logout">Log Out</a></li>
-	  </ul>
+           <span class="pull-right" ng-bind-html="characterImage(64)"></span>
+	  	   <a class="pull-right" href="#" ng-bind="character.name"></a>
 
-			<div id="loginModal" ng-class="requireLogin ? 'modal show' : 'ng-hide'" role="dialog" style="display: auto;">
-			  <div class="modal-dialog">
-
-			    <!-- Modal content-->
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h4 class="modal-title">Login with your Eve Account</h4>
-			      </div>
-			      <div class="modal-body">
-			        <img src="https://images.contentful.com/idjq7aai9ylm/4fSjj56uD6CYwYyus4KmES/4f6385c91e6de56274d99496e6adebab/EVE_SSO_Login_Buttons_Large_Black.png?w=270&h=45" alt="Sign In" class="btn" ng-click="authenticate()"/>
-			      </div>
-			    </div>
-
-			  </div>
-			</div>
-
-	</div>
-
-	<div class="container">
-	 @yield('content')
-	</div>
-	</section>
+    	</div>
+       </div>
+    </div>
+      
+    <div class="container" ng-controller="AccountController">
+      <div class="row row-offcanvas row-offcanvas-left">
+        
+        <!-- sidebar -->
+        <div class="col-xs-6 col-sm-2 sidebar-offcanvas" id="sidebar" role="navigation">
+            @include('partials/side-nav')
+        </div>
+  	
+        <!-- main area -->
+        <div class="col-xs-12 col-sm-10">
+	        @yield('content')
+        </div><!-- /.col-xs-12 main -->
+    </div><!--/.row-->
+  </div><!--/.container-->
+</div><!--/.page-container-->
 
 	<!-- TODO [prod] bundle these resources into a single minified resource -->
 

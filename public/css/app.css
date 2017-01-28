@@ -1,48 +1,80 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,400,600);
 
-html {
-	min-height: 100%;
-}
-
 body {
 	background-color: #CCCCCC;
-	padding-top: 0;
+  font-family: 'Roboto', sans-serif;
 	min-height: 100%;
-	font-family: 'Roboto', sans-serif;
-
+  padding-top: 51px;  
 }
 
 a {
 	color: #336699;	
 }
 
-.navbar-fixed-left {
-  width: 10%;
-  position: fixed;
-  border-radius: 0;
+.text-center {
+  padding-top: 20px;
+}
+.col-xs-12 {
+  background-color: #fff;
+}
+#sidebar {
   height: 100%;
+  padding-right: 0;
+  padding-top: 20px;
+}
+#sidebar .nav {
+  width: 95%;
+}
+#sidebar li {
+  border:0 #f2f2f2 solid;
+  border-bottom-width:1px;
+}
+.navbar-header {
+  width: 100%;
+  padding-left: 5%;
 }
 
-.navbar-nav {
-	margin-top: 30px;
+/* collapsed sidebar styles */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    transition: all 0.25s ease-out;
+  }
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -41.6%;
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    left: -41.6%;
+  }
+  .row-offcanvas-right.active {
+    right: 41.6%;
+  }
+  .row-offcanvas-left.active {
+    left: 41.6%;
+  }
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 41.6%;
+  }
+  #sidebar {
+    padding-top:0;
+  }
 }
 
-.navbar-fixed-left .navbar-nav > li {
-  float: none;  /* Cancel default li float: left */
-  width: 139px;
+.container {
+	padding: 0;
+	margin: 0;
 }
 
-.navbar-fixed-left + .container {
-  
+.bp-card {
+  padding-top: 5%;
 }
-
-/* On using dropdown menu (To right shift popuped) */
-.navbar-fixed-left .navbar-nav > li > .dropdown-menu {
-  margin-top: -50px;
-  margin-left: 140px;
-}
-
-
 .panel-default > .panel-heading {
 	background-color: #00ccff;
 	color: white;
@@ -50,36 +82,6 @@ a {
 }
 
 .position-relative { position: relative; }
-#app {
-	min-height: 100%;
-}
-
-.welcome-fill, .signedin-fill {
-	background: #FFF url(/images/site-bg.jpg) no-repeat;
-	background-size: auto;
-}
-.signedin-fill {
-	background: #FFF url(/images/site-bg.jpg) no-repeat;
-	background-attachment: bottom:
-}
-
-.welcome, .sign-up {
-	color: #cccccc;
-	padding: 57px 28px 0;
-
-    font-style: normal;
-    font-size: 24px;
-    font-weight: 300;
-    line-height: 1.10909;
-}
-
-.welcome h1 {
-	font-size: 48px;
-	color: #FFF;
-    font-style: normal;
-    font-weight: 300;
-    line-height: 1.10909;
-}
 
 .blueprint .panel img {
 	width: 100%;
@@ -90,7 +92,7 @@ a {
 }
 
 .blueprint .panel .label, 
-.blueprint .panel .basdge {
+.blueprint .panel .badge {
 	position: absolute;
 	right: 40px;
 	top: 40px;
@@ -107,6 +109,7 @@ a {
     font-weight: 400;
     line-height: 1.40909;
     background-color: #222;
+    opacity: 0.8;
 
 	font-family: 'Roboto', sans-serif;
 	position: absolute;
