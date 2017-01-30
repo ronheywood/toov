@@ -56,63 +56,76 @@
 
 		<section>
 
-		<div class="blueprint col col-lg-2 col-md-3 col-sm-3 col-xs-5 col-xs-offset-1 " ng-repeat="blueprint in blueprints | orderBy: industryProfit : true">
+		<div class="blueprint-table" ng-repeat="blueprint in blueprints | orderBy: industryProfit : true">
 			
 			<div class="panel panel-default" data-blueprint="">
-				<div class="panel-body">
 
-					<span ng-bind-html="blueprintImage(blueprint,64)" 
-					ng-click="showBlueprintData(blueprint);"></span>
-
+				<div class="panel-header">
+					<span class="label label-success pull-right" ng-show=" blueprint.quantity > 0">
+						NEW
+					</span>
+					<span class="badge pull-right" ng-show=" blueprint.quantity == -2">
+						{{blueprint.runs}} runs
+					</span>
 					<a class="blueprint-name" ng-click="showBlueprintData(blueprint);">
 						 {{blueprint.typeName}}
 						 {{blueprint.quantity == -2 ? '(copy)' : ''}}
 					</a>
-					<span class="badge" ng-show=" blueprint.quantity == -2">
-						{{blueprint.runs}} runs
-					</span>
-
-					<span class="label label-success" ng-show=" blueprint.quantity > 0">
-						NEW
-					</span>
-
 				</div>
-				<ul class="list-group">
-					
-					<li class="list-group-item">
-					Research: {{blueprint.materialEfficiency}} /
-					{{blueprint.timeEfficiency}}</li>
-					<li class="list-group-item">
-						
-						Sell ISK <br />
-						<span ng-bind-html="marketSellPriceHtml(blueprint)">
-						</span>
-						
-						x {{ blueprint.blueprintCreatesQuantity }}
-					</li>
-					<li class="list-group-item">
-						
-						Manufacturing <span>ISK</span>
-						<br />
-						<span ng-bind-html="industryCost(blueprint)">
-						</span>
-					</li>
-					<li class="list-group-item">
-						
-						Profit ISK <br/>
-						<span ng-bind-html="industryProfitHtml(blueprint)">
-						</span>
-					</li>
 
-					<li class="list-group-item" ng-show="blueprint.tech2ItemId">
-						{{ blueprint.tech2Invention.length }} Invention<span ng-hide="blueprint.tech2Invention.length==1">s</span>
-						<div>{{ blueprint.baseProbability*100 }}% base probability of success</div>
-					</li>
-					<li class="list-group-item" ng-hide="blueprint.tech2ItemId">
-						No Science Inventions Available
-						<div>&nbsp;</div>
-					</li>
-				</ul>
+				<table class="table">
+					<tr>
+						<th>&nbsp;</th>
+						<th>Research</th>
+						<th>Industry Output Value</th>
+						<th>Industry Material Cost</th>
+						<th>Profit</th>
+						<th>
+							{{ blueprint.tech2Invention.length }} 
+							Invention<span ng-hide="blueprint.tech2Invention.length==1">s</span>
+						</th>
+					</tr>
+					<tr>
+						<td>
+							<span ng-bind-html="blueprintImage(blueprint,64)" 
+							ng-click="showBlueprintData(blueprint);"></span>
+						</td>
+						<td>
+						{{blueprint.materialEfficiency}} /
+						{{blueprint.timeEfficiency}}
+						</td>
+
+						<td>
+							<span ng-bind-html="marketSellPriceHtml(blueprint)">
+							</span>
+							
+							x {{ blueprint.blueprintCreatesQuantity }}
+						</td>
+						<td>
+							<span ng-bind-html="industryCost(blueprint)">
+							</span>
+						</td>
+						<td>
+							<span ng-bind-html="industryProfitHtml(blueprint)">
+							</span>
+						</td>
+						<td>
+							<article ng-show="blueprint.tech2ItemId">
+								
+								<div class="invention" ng-repeat="invention in blueprint.tech2Invention">
+								<span class="badge pull-right">{{ invention.baseProbability*100 }}%</span>
+								<p>{{ invention.tech2ItemName }}</p>
+								
+								</div>
+
+							</article>
+							<article ng-hide="blueprint.tech2ItemId">
+								No Science Inventions Available
+								<div>&nbsp;</div>
+							</article>
+						</td>
+					</tr>
+				</table>
 			</div>
 
 		</div>

@@ -78,7 +78,7 @@
 
 	<!-- ViewModel controllers -->
 	<script type="text/javascript" src="js/AccountController.js"></script>	
-	<script type="text/javascript" src="js/BlueprintController.js"></script>	
-
+	<script type="text/javascript" src="js/BlueprintController.js"></script>
+	<script type="text/javascript" src="js/SkillsController.js"></script>
 	</body>
 </html>

@@ -3,6 +3,7 @@
 <p class="clearfix"/><p/><p/>
 <ul class="nav" ng-hide="requireLogin">
   <li><a href="/">Blueprints</a></li>
+  <li><a href="/skills">Skill Queue</a></li>
   <li><a href="/logout">Logout</a></li>        
 </ul>
 

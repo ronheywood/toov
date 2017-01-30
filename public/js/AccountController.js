@@ -19,7 +19,7 @@
 				var redirect_uri = 'redirect_uri='+ base_server +'/openauth';
 
 				var client_id = 'client_id='+env.client_id;
-				var scope = 'scope=publicData+characterAssetsRead+esi-assets.read_assets.v1';
+				var scope = 'scope=publicData+characterAssetsRead+esi-assets.read_assets.v1+esi-skills.read_skillqueue.v1';
 				var action = authPath + '?%s&%s&%s&%s&%s'.format(response_type,redirect_uri,client_id,scope)
 
 				var config = "toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=350,height=410,left=50,top=50,titlebar=yes";

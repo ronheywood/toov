@@ -24,4 +24,7 @@ $app->get('/blueprints/{blueprints}', 'BlueprintsController@index');
 $app->get('/blueprints/{blueprints}/materials', 'BlueprintsController@blueprintMaterials');
 
 
+$app->get('/skills', 'SkillsController@index');
+$app->get('/character/{characterId}/skillqueue', 'SkillsController@getSkillQueue');
+
 $app->get('/minerals', 'MineralsController@index');
