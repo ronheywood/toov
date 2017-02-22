@@ -124,6 +124,8 @@ var n = this,
 					 .then(function(prices){
 			   			var parsed = xml.parse(prices).type || [];
 			   			
+			   			if(!Array.isArray(parsed)) parsed = [parsed];
+
 			   			parsed.forEach(function(mp,i){
 			   				embelishWithMarketSellPrice(mp);
 			   			})
@@ -170,6 +172,7 @@ var n = this,
 				   	function(blueprints) {
 
 				   		var parsed = xml.parse(blueprints);
+			   			if(!Array.isArray(parsed.rowset.row)) parsed.rowset.row = [parsed.rowset.row];
 
 				   		parsed.rowset.row.forEach(function(bp){
 				   			embelishWithResearch(bp);
