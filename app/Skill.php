@@ -9,7 +9,7 @@ use App\ESI;
 class Skill extends Model
 {
 	
-	private static $baseSQL = 'select * from invTypes where published = true';
+	private static $baseSQL = 'select * from invtypes where published = true';
 
 	public static function GetSkillQueue($charId){
 
