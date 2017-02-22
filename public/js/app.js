@@ -24,26 +24,26 @@
 		.factory('env', [function() {
 	  		
 	  		var dev = {
-	  			client_id: '4344fa43fd9d4114aa8823700af948c1'
+	  			client_id: 'client'
 	  		};
 
 	  		var uat = {
-	  			client_id: '4344fa43fd9d4114aa8823700af948c1'
+	  			client_id: 'client'
 	  		};
 
 	  		var production = {
-	  			client_id: ''
+	  			client_id: 'client'
 	  		};
 
 	  		switch(window.location.hostname){
 	  			case 'localhost':
 	  				return dev;
 	  			break;
-	  			case 'toov.clients.ronheywood.co.uk':
+	  			case 'uatserver':
 	  				return uat;
 	  			break;
 	  		}
 
-	  		return dev;
+	  		return production;
 
 		}]);

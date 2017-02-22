@@ -103,7 +103,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     private static function post($url, Array $fields= [], Array $headers = []){
         
-        $basic = '4344fa43fd9d4114aa8823700af948c1:QXPOfBkHFs50aqkSfh4A2WmTo3fL51TMp1mObhlb';
+        $basic = 'client_id:client_secret';
 
         $ch = curl_init();
 
